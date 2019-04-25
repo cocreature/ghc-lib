@@ -40,3 +40,11 @@ steps:
       stack setup > /dev/null
       stack --no-terminal build
       stack runhaskell CI.hs
+
+  - task: CopyFiles@2
+    displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+    inputs:
+      Contents: |
+      ghc-lib-parser-*.tar.gz
+      ghc-lib-xxx.tar.gz
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
