@@ -45,6 +45,6 @@ steps:
     displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
     inputs:
       Contents: |
-      ghc-lib-parser-*.tar.gz
-      ghc-lib-xxx.tar.gz
+        ghc-lib-parser-*.tar.gz
+        ghc-lib-*.tar.gz
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
