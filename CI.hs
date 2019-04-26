@@ -24,7 +24,7 @@ main = do
     writeFile "stack.yaml" $ stackYaml ++ unlines ["- ghc"]
     tarball <- sDistCreateExtract
     renameDirectory (dropExtensions tarball) "ghc-lib-parser"
-    removeFile tarball
+    -- removeFile tarball
     removeFile "ghc/ghc-lib-parser.cabal"
 
     -- Make and extract an sdist of ghc-lib.
@@ -33,7 +33,7 @@ main = do
     cmd "stack exec -- ghc-lib-gen ghc --ghc-lib"
     tarball <- sDistCreateExtract
     renameDirectory (dropExtensions tarball) "ghc-lib"
-    removeFile tarball
+    -- removeFile tarball
     removeFile "ghc/ghc-lib.cabal"
 
     -- Test the new projects.
