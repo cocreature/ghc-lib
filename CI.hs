@@ -34,16 +34,15 @@ main = do
     writeFile "stack.yaml" $ stackYaml ++ unlines ["- ghc"]
     cmd "stack sdist ghc --tar-dir=."
     cmd "tar -xf ghc-lib-parser-0.1.0.tar.gz"
-    renameDirectory (dropExtensions tarball) "ghc-lib-parser"
+    cmd "mv ghc-lib-parser-0.1.0 ghc-lib-parser"
     removeFile "ghc/ghc-lib-parser.cabal"
 
     -- Make and extract an sdist of ghc-lib.
     cmd "cd ghc && git checkout ."
     appendFile "ghc/hadrian/stack.yaml" $ unlines ["ghc-options:","  \"$everything\": -O0 -j"]
     cmd "stack exec -- ghc-lib-gen ghc --ghc-lib"
-    cmd "stack sdist ghc --tar-dir=."
     cmd "tar -xf ghc-lib-0.1.0.tar.gz"
-    renameDirectory (dropExtensions tarball) "ghc-lib"
+    cmd "mv ghc-lib-0.1.0 ghc-lib"
     removeFile "ghc/ghc-lib.cabal"
 
     -- Test the new projects.
