@@ -1,7 +1,7 @@
 -- Copyright (c) 2019, Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 -- SPDX-License-Identifier: (Apache-2.0 OR BSD-3-Clause)
 
--- CI script, invoked by both Travis and Appveyor
+-- CI script, invoked by Azure
 
 import Control.Monad
 import System.Directory
@@ -20,7 +20,6 @@ main = do
     cmd "git clone https://gitlab.haskell.org/ghc/ghc.git --recursive"
 
     withCurrentDirectory "ghc" $ do
-        ghcDir <- getCurrentDirectory
         cmd $ "git remote add upstream https://github.com/digital-asset/ghc.git"
         cmd $ "git fetch upstream"
         base <- systemOutput_ $ "git merge-base upstream/da-master master"
@@ -41,6 +40,7 @@ main = do
     cmd "cd ghc && git checkout ."
     appendFile "ghc/hadrian/stack.yaml" $ unlines ["ghc-options:","  \"$everything\": -O0 -j"]
     cmd "stack exec -- ghc-lib-gen ghc --ghc-lib"
+    cmd "stack sdist ghc --tar-dir=."
     cmd "tar -xf ghc-lib-0.1.0.tar.gz"
     cmd "mv ghc-lib-0.1.0 ghc-lib"
     removeFile "ghc/ghc-lib.cabal"
@@ -73,4 +73,3 @@ main = do
             (t, _) <- duration $ system_ x
             putStrLn $ "# Completed in " ++ showDuration t ++ ": " ++ x ++ "\n"
             hFlush stdout
-
