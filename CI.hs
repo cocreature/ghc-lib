@@ -34,6 +34,7 @@ main = do
     cmd "stack sdist ghc --tar-dir=."
     cmd "tar -xf ghc-lib-parser-0.1.0.tar.gz"
     cmd "mv ghc-lib-parser-0.1.0 ghc-lib-parser"
+    cmd "cat ghc/ghc-lib-parser.cabal"
     removeFile "ghc/ghc-lib-parser.cabal"
 
     -- Make and extract an sdist of ghc-lib.
@@ -43,6 +44,7 @@ main = do
     cmd "stack sdist ghc --tar-dir=."
     cmd "tar -xf ghc-lib-0.1.0.tar.gz"
     cmd "mv ghc-lib-0.1.0 ghc-lib"
+    cmd "cat ghc/ghc-lib.cabal"
     removeFile "ghc/ghc-lib.cabal"
 
     -- Test the new projects.
