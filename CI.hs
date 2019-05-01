@@ -32,18 +32,18 @@ main = do
     cmd "stack exec -- ghc-lib-gen ghc --ghc-lib-parser"
     stackYaml <- readFile' "stack.yaml"
     writeFile "stack.yaml" $ stackYaml ++ unlines ["- ghc"]
-    tarball <- sDistCreateExtract
+    cmd "stack sdist ghc --tar-dir=."
+    cmd "tar -xf ghc-lib-parser-0.1.0.tar.gz"
     renameDirectory (dropExtensions tarball) "ghc-lib-parser"
-    -- removeFile tarball
     removeFile "ghc/ghc-lib-parser.cabal"
 
     -- Make and extract an sdist of ghc-lib.
     cmd "cd ghc && git checkout ."
     appendFile "ghc/hadrian/stack.yaml" $ unlines ["ghc-options:","  \"$everything\": -O0 -j"]
     cmd "stack exec -- ghc-lib-gen ghc --ghc-lib"
-    tarball <- sDistCreateExtract
+    cmd "stack sdist ghc --tar-dir=."
+    cmd "tar -xf ghc-lib-0.1.0.tar.gz"
     renameDirectory (dropExtensions tarball) "ghc-lib"
-    -- removeFile tarball
     removeFile "ghc/ghc-lib.cabal"
 
     -- Test the new projects.
@@ -75,9 +75,3 @@ main = do
             putStrLn $ "# Completed in " ++ showDuration t ++ ": " ++ x ++ "\n"
             hFlush stdout
 
-      sDistCreateExtract :: IO String
-      sDistCreateExtract = do
-        cmd "stack sdist ghc --tar-dir=."
-        [tarball] <- filter (isExtensionOf ".tar.gz") <$> getDirectoryContents "."
-        cmd $ "tar -xf " ++ tarball
-        return tarball
